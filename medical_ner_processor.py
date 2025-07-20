@@ -59,14 +59,12 @@ class MedicalNERProcessor:
 
         hidden_states, offset_mapping = self.get_embeddings(text)
 
-        # Vectorized approach
         def get_entity_embedding(row: pd.Series) -> np.ndarray:
             """
             Get the embedding for a single entity
             """
             entity_start, entity_end = row['start'], row['end']
 
-            # Vectorized overlap check
             token_starts = offset_mapping[:, 0]
             token_ends = offset_mapping[:, 1]
 
@@ -79,6 +77,5 @@ class MedicalNERProcessor:
             else:
                 return np.zeros(hidden_states.shape[-1])
 
-        # Apply vectorized function
         entities_df['embedding'] = entities_df.apply(get_entity_embedding, axis=1)
         return entities_df
